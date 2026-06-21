@@ -1,0 +1,19 @@
+name: QuakeBR
+version: 1.0.0
+main: io.github.amivalohotechai.quakebr.QuakeBR
+description: A Battle Royal game inspired by Quake
+author: AmiValoHoteChai
+website: https://github.com/amivalohotechai
+api-version: '26.1.2'
+
+
+commands:
+  qbr:
+    aliases: [br]
+    usage: /<command>
+    permission: qbr.op
+    permission-message: You are not allowed to use this command.
+  get:
+    usage: /<command>
+    permission: qbr.op
+    permission-message: You are not allowed to use this command.
