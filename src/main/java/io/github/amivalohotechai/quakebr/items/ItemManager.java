@@ -12,10 +12,9 @@ import java.util.List;
 
 public final class ItemManager {
 
-
     public static ItemStack createAk(QuakeBR plugin) {
         MiniMessage MM = plugin.getMm();
-        return new ItemBuilder(Material.CROSSBOW)
+        return new ItemBuilder(Material.CROSSBOW, 1)
                 .setKey(plugin.getAkKey())
                 .setName(MM.deserialize(
                         "<gradient:#8E0E00:#FFF94C><b><!i>AK-47</b></gradient>"
@@ -23,7 +22,7 @@ public final class ItemManager {
                 .setLore(List.of(MM.deserialize(
                         "<gradient:#8E0E00:#FFF94C><!i>Fires continuously.</gradient>"
                 )))
-                .addEnchant(Enchantment.FIRE_ASPECT, 2, false)
+                .addEnchant(Enchantment.FIRE_ASPECT, 2, true)
                 .isUnbreakable(true)
                 .flags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
                 .build();
@@ -37,7 +36,7 @@ public final class ItemManager {
 
     public static ItemStack createRailGun(QuakeBR plugin) {
         MiniMessage MM = plugin.getMm();
-        return new ItemBuilder(Material.COPPER_HOE)
+        return new ItemBuilder(Material.COPPER_HOE, 1)
                 .setKey(plugin.getRailgunKey())
                 .setName(MM.deserialize(
                         "<gradient:red:blue><b><!i>Rail Gun</b></gradient>"
@@ -45,7 +44,7 @@ public final class ItemManager {
                 .setLore(List.of(MM.deserialize(
                         "<gradient:red:blue><!i>Fires an instantaneous laser beam.</gradient>"
                 )))
-                .addEnchant(Enchantment.FIRE_ASPECT, 2, false)
+                .addEnchant(Enchantment.FIRE_ASPECT, 2, true)
                 .isUnbreakable(true)
                 .flags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
                 .build();
@@ -56,4 +55,46 @@ public final class ItemManager {
         return item.getItemMeta().getPersistentDataContainer().has(
                 plugin.getRailgunKey(), PersistentDataType.BOOLEAN);
     }
+
+    public static ItemStack createAssaultRiffleAmmo(QuakeBR plugin, int amount) {
+
+        MiniMessage MM = plugin.getMm();
+        return new ItemBuilder(Material.LIGHTNING_ROD, amount)
+                .setKey(plugin.getAssaultRiffleAmmoKey())
+                .setName(MM.deserialize(
+                        "<gradient:#B87333:gold><!i>Assault Riffle Bullet<gold>"
+                ))
+                .setLore(List.of(MM.deserialize(
+                        "<white><!i>Use this for assault riffles</white>"
+                )))
+                .isUnbreakable(true)
+                .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
+                .build();
+    }
+
+    public static boolean isAssaultRiffleAmmo(ItemStack item, QuakeBR plugin) {
+        if (!item.hasItemMeta()) return false;
+        return item.getItemMeta().getPersistentDataContainer().has(plugin.getAssaultRiffleAmmoKey(), PersistentDataType.BOOLEAN);
+    }
+
+    public static ItemStack createSniperRiffleAmmo(QuakeBR plugin, int amount) {
+        MiniMessage MM = plugin.getMm();
+        return new ItemBuilder(Material.COPPER_NUGGET, amount)
+                .setKey(plugin.getSniperRiffleAmmoKey())
+                .setName(MM.deserialize(
+                        "<gradient:purple:gold><!i>Sniper Riffle Bullet</gradient>"
+                ))
+                .setLore(List.of(MM.deserialize(
+                        "<white><!i>Use this for sniper riffles</white>"
+                )))
+                .isUnbreakable(true)
+                .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
+                .build();
+    }
+
+    public static boolean isSniperRiffleAmmo(ItemStack item, QuakeBR plugin) {
+        if (!item.hasItemMeta()) return false;
+        return item.getItemMeta().getPersistentDataContainer().has(plugin.getSniperRiffleAmmoKey(), PersistentDataType.BOOLEAN);
+    }
+
 }

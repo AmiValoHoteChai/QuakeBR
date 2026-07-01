@@ -3,15 +3,20 @@ package io.github.amivalohotechai.quakebr.commands;
 import io.github.amivalohotechai.quakebr.QuakeBR;
 import io.github.amivalohotechai.quakebr.enums.GameState;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -60,29 +65,40 @@ public class QBRCommand implements TabExecutor {
             ));
             return;
         }
-        Set<UUID> joinedPlayers = plugin.getPlayers();
-        if (joinedPlayers.contains(player.getUniqueId())) {
+        Map<UUID, ItemStack[]> joinedPlayers = plugin.getPlayers();
+        if (joinedPlayers.containsKey(player.getUniqueId())) {
             player.sendMessage(MM.deserialize(
                     "<red><!i>You are already in the game.</red>"
             ));
             return;
         }
-        joinedPlayers.add(player.getUniqueId());
+        Inventory playerInventory = player.getInventory();
+        joinedPlayers.put(player.getUniqueId(), playerInventory.getContents());
+        playerInventory.clear();
+
         player.sendMessage(MM.deserialize(
                 "<gold><!i>Welcome to the game.</gold>"
         ));
     }
 
     private void handleLeave(Player player) {
-        Set<UUID> joinedPlayers = plugin.getPlayers();
+        Map<UUID, ItemStack[]> joinedPlayers = plugin.getPlayers();
         UUID playerID = player.getUniqueId();
 
-        if (!joinedPlayers.contains(playerID)) {
+        if (!joinedPlayers.containsKey(playerID)) {
             player.sendMessage(MM.deserialize(
                     "<red><!i>You are not in the game.</red>"
             ));
             return;
         }
+        if (plugin.getGameState() == GameState.RUNNING) {
+            player.sendMessage(MM.deserialize(
+                    "<red><!i>You cannot leave the game now.</red>"
+            ));
+            return;
+        }
+
+        player.getInventory().setContents(joinedPlayers.get(playerID));
         joinedPlayers.remove(playerID);
         player.sendMessage(MM.deserialize("<yellow><!i>You left the game."));
     }
@@ -100,14 +116,29 @@ public class QBRCommand implements TabExecutor {
             ));
             return;
         }
-        Set<UUID> joinedPlayers = plugin.getPlayers();
+        Map<UUID, ItemStack[]> joinedPlayers = plugin.getPlayers();
         if (joinedPlayers.size() < 2) {
             player.sendMessage(MM.deserialize(
                     "<red><!i>Need at least 2 players to start the game.</red>"
             ));
             return;
         }
+        Location spawnLocation = player.getWorld().getSpawnLocation();
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            for (UUID id: joinedPlayers.keySet()) {
+                Player p = Bukkit.getPlayer(id);
+                if (p == null) continue;
+                p.teleport(spawnLocation.add(0, 300, 0));
+                p.getInventory().setChestplate(ItemStack.of(Material.ELYTRA));
+                p.setHealth(20);
+            }
+        });
+        Bukkit.getServer().sendMessage(MM.deserialize(
+                "<gold><!i><b>Game has started</b></gold>"
+        ));
         plugin.setGameState(GameState.RUNNING);
+
+
     }
 
     @Override

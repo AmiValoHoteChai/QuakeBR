@@ -18,8 +18,8 @@ public final class ItemBuilder {
     private final ItemStack item;
     private final ItemMeta meta;
 
-    public ItemBuilder(Material material) {
-        this.item = ItemStack.of(material);
+    public ItemBuilder(Material material, int amount) {
+        this.item = ItemStack.of(material, amount);
         this.meta = item.getItemMeta();
     }
 

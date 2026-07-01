@@ -11,8 +11,6 @@ commands:
   qbr:
     aliases: [br]
     usage: /<command>
-    permission: qbr.op
-    permission-message: You are not allowed to use this command.
   get:
     usage: /<command>
     permission: qbr.op

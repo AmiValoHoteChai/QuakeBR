@@ -2,6 +2,7 @@ package io.github.amivalohotechai.quakebr.listeners;
 
 import io.github.amivalohotechai.quakebr.QuakeBR;
 import io.github.amivalohotechai.quakebr.items.ItemManager;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
@@ -32,8 +35,30 @@ public class GunListener implements Listener {
         if (!event.getAction().isRightClick()) return;
         event.setCancelled(true);
 
-        if (ItemManager.isRailgun(item, plugin)) handleGunDamage(player, 20);
-        if (ItemManager.isAK(item, plugin)) handleGunDamage(player, 5);
+        if (ItemManager.isRailgun(item, plugin)) {
+            NamespacedKey key = plugin.getRailgunCooldownKey();
+            PersistentDataContainer data = player.getPersistentDataContainer();
+
+            long expireTime = data.getOrDefault(key, PersistentDataType.LONG, 0L);
+
+            if (expireTime == 0)
+                data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
+            else {
+                long timeLeft = (expireTime - System.currentTimeMillis());
+                timeLeft = (long) Math.ceil(timeLeft / 1000.0);
+                if (timeLeft > 0) {
+
+                    MiniMessage MM = plugin.getMm();
+                    player.sendMessage(MM.deserialize(
+                            "<red>[Cooldown] </red> Please wait for %d seconds.".formatted(timeLeft)
+                    ));
+                    return;
+                } else data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
+            }
+
+            handleGunDamage(player, 25);
+        }
+        else if (ItemManager.isAK(item, plugin)) handleGunDamage(player, 5);
 
     }
 
@@ -44,7 +69,7 @@ public class GunListener implements Listener {
         laser(player, start, direction);
         World playerWorld = player.getWorld();
 
-        playerWorld.playSound(player.getLocation().add(0, 2, 0), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 50, .5f);
+        playerWorld.playSound(player.getLocation().add(0, 2, 0), Sound.ENTITY_FIREWORK_ROCKET_BLAST, 16, .5f);
 
         RayTraceResult result = playerWorld.rayTrace(
                 start,
@@ -64,6 +89,7 @@ public class GunListener implements Listener {
     private void damageTarget(Damageable target, Player player, int amount) {
         Location targetLocation = target.getLocation();
 
+        if (target instanceof LivingEntity livingTarget) livingTarget.setNoDamageTicks(0);
         target.damage(amount, player);
         World targetWorld = target.getWorld();
         if (target.getHealth() == 0) {
