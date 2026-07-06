@@ -31,7 +31,9 @@ public final class ItemManager {
     public static boolean isAK(ItemStack item, QuakeBR plugin) {
         if (item.getItemMeta() == null) return false;
         return item.getItemMeta().getPersistentDataContainer().has(
-                plugin.getAkKey(), PersistentDataType.BOOLEAN);
+                plugin.getAkKey(),
+                PersistentDataType.BOOLEAN
+        );
     }
 
     public static ItemStack createRailGun(QuakeBR plugin) {
@@ -53,7 +55,9 @@ public final class ItemManager {
     public static boolean isRailgun(ItemStack item, QuakeBR plugin) {
         if (item.getItemMeta() == null) return false;
         return item.getItemMeta().getPersistentDataContainer().has(
-                plugin.getRailgunKey(), PersistentDataType.BOOLEAN);
+                plugin.getRailgunKey(),
+                PersistentDataType.BOOLEAN
+        );
     }
 
     public static ItemStack createAssaultRiffleAmmo(QuakeBR plugin, int amount) {
@@ -74,7 +78,10 @@ public final class ItemManager {
 
     public static boolean isAssaultRiffleAmmo(ItemStack item, QuakeBR plugin) {
         if (!item.hasItemMeta()) return false;
-        return item.getItemMeta().getPersistentDataContainer().has(plugin.getAssaultRiffleAmmoKey(), PersistentDataType.BOOLEAN);
+        return item.getItemMeta().getPersistentDataContainer().has(
+                plugin.getAssaultRiffleAmmoKey(),
+                PersistentDataType.BOOLEAN
+        );
     }
 
     public static ItemStack createSniperRiffleAmmo(QuakeBR plugin, int amount) {
@@ -94,7 +101,61 @@ public final class ItemManager {
 
     public static boolean isSniperRiffleAmmo(ItemStack item, QuakeBR plugin) {
         if (!item.hasItemMeta()) return false;
-        return item.getItemMeta().getPersistentDataContainer().has(plugin.getSniperRiffleAmmoKey(), PersistentDataType.BOOLEAN);
+        return item.getItemMeta().getPersistentDataContainer().has(
+                plugin.getSniperRiffleAmmoKey(),
+                PersistentDataType.BOOLEAN
+        );
+    }
+
+    public static ItemStack createRocketLauncher(QuakeBR plugin, int amount) {
+
+        MiniMessage MM = plugin.getMm();
+        return new ItemBuilder(Material.COPPER_SHOVEL, amount)
+                .setKey(plugin.getRocketLauncherKey())
+                .isUnbreakable(true)
+                .setName(MM.deserialize(
+                        "<gradient:blue:red><!i>Rocket Launcher</gradient>"
+                ))
+                .setLore(List.of(MM.deserialize(
+                        "<white><!i>Launches heavy rockets</white>"
+                )))
+                .addEnchant(Enchantment.DENSITY, 1, true)
+                .flags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_UNBREAKABLE)
+                .build();
+    }
+
+    public static boolean isRocketLauncher(ItemStack item, QuakeBR plugin) {
+
+        if (!item.hasItemMeta()) return false;
+        return item.getItemMeta().getPersistentDataContainer().has(
+                plugin.getRocketLauncherKey(),
+                PersistentDataType.BOOLEAN
+        );
+    }
+
+//    public static ItemStack createRocket(QuakeBR plugin, int amount) {
+//
+//        MiniMessage MM = plugin.getMm();
+//        return new ItemBuilder(Material.SNOWBALL, amount)
+//                .setKey(plugin.getRocketKey())
+//                .setName(MM.deserialize(
+//                        "<gradient:white:gray><!i>Rocket</gradient>"
+//                ))
+//                .setLore(List.of(MM.deserialize(
+//                        "<white><!i>Rocket for Rocket Launcher</white>"
+//                )))
+//                .addEnchant(Enchantment.DENSITY, 1, true)
+//                .flags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS)
+//                .build();
+//    }
+
+    public static boolean isRocket(ItemStack item, QuakeBR plugin) {
+        if (!item.hasItemMeta()) return false;
+
+        return item.getItemMeta().getPersistentDataContainer().has(
+                plugin.getRocketKey(),
+                PersistentDataType.BOOLEAN
+        );
     }
 
 }

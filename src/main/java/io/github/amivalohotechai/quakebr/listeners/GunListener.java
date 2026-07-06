@@ -29,37 +29,40 @@ public class GunListener implements Listener {
         ItemStack item = event.getItem();
 
         // If player right clicks with bare hands or item does not have meta
-        if (item == null || !item.hasItemMeta()) return;
+        if (item == null) return;
 
         // If the item is not the Rail Gun
         if (!event.getAction().isRightClick()) return;
         event.setCancelled(true);
 
-        if (ItemManager.isRailgun(item, plugin)) {
-            NamespacedKey key = plugin.getRailgunCooldownKey();
-            PersistentDataContainer data = player.getPersistentDataContainer();
-
-            long expireTime = data.getOrDefault(key, PersistentDataType.LONG, 0L);
-
-            if (expireTime == 0)
-                data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
-            else {
-                long timeLeft = (expireTime - System.currentTimeMillis());
-                timeLeft = (long) Math.ceil(timeLeft / 1000.0);
-                if (timeLeft > 0) {
-
-                    MiniMessage MM = plugin.getMm();
-                    player.sendMessage(MM.deserialize(
-                            "<red>[Cooldown] </red> Please wait for %d seconds.".formatted(timeLeft)
-                    ));
-                    return;
-                } else data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
-            }
-
-            handleGunDamage(player, 25);
-        }
+        if (ItemManager.isRailgun(item, plugin)) handleRailGunDamage(player, 25);
         else if (ItemManager.isAK(item, plugin)) handleGunDamage(player, 5);
 
+    }
+
+    public void handleRailGunDamage(Player player, int amount) {
+
+        NamespacedKey key = plugin.getRailgunCooldownKey();
+        PersistentDataContainer data = player.getPersistentDataContainer();
+
+        long expireTime = data.getOrDefault(key, PersistentDataType.LONG, 0L);
+
+        if (expireTime == 0)
+            data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
+        else {
+            long timeLeft = (expireTime - System.currentTimeMillis());
+            timeLeft = (long) Math.ceil(timeLeft / 1000.0);
+            if (timeLeft > 0) {
+
+                MiniMessage MM = plugin.getMm();
+                player.sendMessage(MM.deserialize(
+                        "<red>[Cooldown] </red> Please wait for %d seconds.".formatted(timeLeft)
+                ));
+                return;
+            } else data.set(key, PersistentDataType.LONG, System.currentTimeMillis() + (3 * 1000));
+        }
+
+        handleGunDamage(player, amount);
     }
 
     private void handleGunDamage(Player player, int amount) {

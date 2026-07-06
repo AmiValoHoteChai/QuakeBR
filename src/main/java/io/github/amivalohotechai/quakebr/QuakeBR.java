@@ -5,8 +5,10 @@ import io.github.amivalohotechai.quakebr.commands.QBRCommand;
 import io.github.amivalohotechai.quakebr.enums.GameState;
 import io.github.amivalohotechai.quakebr.listeners.GameListener;
 import io.github.amivalohotechai.quakebr.listeners.GunListener;
+import io.github.amivalohotechai.quakebr.listeners.RocketLauncherListener;
 import io.github.amivalohotechai.quakebr.recipes.AmmoRecipe;
 import io.github.amivalohotechai.quakebr.recipes.GunRecipe;
+import io.github.amivalohotechai.quakebr.recipes.RocketLauncherRecipe;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.PluginCommand;
@@ -25,7 +27,10 @@ public class QuakeBR extends JavaPlugin {
     // Keys for custom items and recipe's
     private final NamespacedKey railgunKey = new NamespacedKey(this, "railgun");
     private final NamespacedKey akKey = new NamespacedKey(this, "ak");
+    private final NamespacedKey rocketLauncherKey = new NamespacedKey(this, "rocket-launcher");
+    private final NamespacedKey rocketKey = new NamespacedKey(this, "rocket");
     private final NamespacedKey railgunCooldownKey = new NamespacedKey(this, "railgun-cooldown");
+    private final NamespacedKey rocketLauncherCooldownKey = new NamespacedKey(this, "rocket-launcher-cooldown");
 
     // Later features
     private final NamespacedKey assaultRiffleAmmoKey = new NamespacedKey(this, "assault-riffle-ammo");
@@ -37,6 +42,7 @@ public class QuakeBR extends JavaPlugin {
         // Event Listeners Registration
         getServer().getPluginManager().registerEvents(new GunListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(this), this);
+        getServer().getPluginManager().registerEvents(new RocketLauncherListener(this), this);
 
         // Commands registration
         PluginCommand qbr = getCommand("qbr");
@@ -48,6 +54,7 @@ public class QuakeBR extends JavaPlugin {
         // Recipes registration
         getServer().addRecipe(GunRecipe.getAkRecipe(this));
         getServer().addRecipe(GunRecipe.getRailgunRecipe(this));
+        getServer().addRecipe(RocketLauncherRecipe.getRocketLauncherRecipe(this));
 
         // Bullets will be added later into the game
         getServer().addRecipe(AmmoRecipe.getAssaultRiffleAmmoRecipe(this));
@@ -92,6 +99,18 @@ public class QuakeBR extends JavaPlugin {
 
     public Map<UUID, ItemStack[]> getEliminatedPlayers() {
         return eliminatedPlayers;
+    }
+
+    public NamespacedKey getRocketLauncherKey() {
+        return rocketLauncherKey;
+    }
+
+    public NamespacedKey getRocketLauncherCooldownKey() {
+        return rocketLauncherCooldownKey;
+    }
+
+    public NamespacedKey getRocketKey() {
+        return rocketKey;
     }
 
 }
