@@ -10,7 +10,7 @@ public class RocketLauncherRecipe {
 
     public static ShapedRecipe getRocketLauncherRecipe(QuakeBR plugin) {
 
-        ItemStack item = ItemManager.createRocketLauncher(plugin, 1);
+        ItemStack item = ItemManager.createRocketLauncher(plugin);
 
         ShapedRecipe recipe = new ShapedRecipe(plugin.getRocketLauncherKey(), item);
 

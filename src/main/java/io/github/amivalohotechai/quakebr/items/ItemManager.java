@@ -107,10 +107,10 @@ public final class ItemManager {
         );
     }
 
-    public static ItemStack createRocketLauncher(QuakeBR plugin, int amount) {
+    public static ItemStack createRocketLauncher(QuakeBR plugin) {
 
         MiniMessage MM = plugin.getMm();
-        return new ItemBuilder(Material.COPPER_SHOVEL, amount)
+        return new ItemBuilder(Material.COPPER_SHOVEL, 1)
                 .setKey(plugin.getRocketLauncherKey())
                 .isUnbreakable(true)
                 .setName(MM.deserialize(

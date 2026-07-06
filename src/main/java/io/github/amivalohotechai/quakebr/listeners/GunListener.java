@@ -33,10 +33,15 @@ public class GunListener implements Listener {
 
         // If the item is not the Rail Gun
         if (!event.getAction().isRightClick()) return;
-        event.setCancelled(true);
 
-        if (ItemManager.isRailgun(item, plugin)) handleRailGunDamage(player, 25);
-        else if (ItemManager.isAK(item, plugin)) handleGunDamage(player, 5);
+        if (ItemManager.isRailgun(item, plugin)) {
+            event.setCancelled(true);
+            handleRailGunDamage(player, 25);
+        }
+        else if (ItemManager.isAK(item, plugin)) {
+            event.setCancelled(true);
+            handleGunDamage(player, 5);
+        }
 
     }
 

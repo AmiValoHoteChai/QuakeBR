@@ -47,17 +47,17 @@ public class GameListener implements Listener {
         eliminatePlayer(player);
     }
 
-    @EventHandler
-    public void onFoodLevelChange(FoodLevelChangeEvent event) {
-
-        if (!(event.getEntity() instanceof Player player)) return;
-
-        if (plugin.getGameState() != GameState.RUNNING) return;
-
-        if (!plugin.getPlayers().containsKey(player.getUniqueId())) return;
-
-        event.setCancelled(true);
-    }
+//    @EventHandler
+//    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+//
+//        if (!(event.getEntity() instanceof Player player)) return;
+//
+//        if (plugin.getGameState() != GameState.RUNNING) return;
+//
+//        if (!plugin.getPlayers().containsKey(player.getUniqueId())) return;
+//
+//        event.setCancelled(true);
+//    }
 
     private void eliminatePlayer(Player player) {
         UUID id = player.getUniqueId();

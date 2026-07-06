@@ -87,8 +87,7 @@ public class RocketLauncherListener implements Listener {
                 PersistentDataType.BOOLEAN
         )) return;
 
-        rocket.getWorld().createExplosion(rocket.getLocation(), 15, false);
-        event.setCancelled(true);
+        rocket.getWorld().createExplosion(rocket.getLocation(), 3, false);
     }
 
 }

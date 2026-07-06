@@ -44,6 +44,7 @@ public class GetCommand implements TabExecutor {
         switch (args[0]) {
             case "ak"-> giveItem(player, ItemManager.createAk(plugin));
             case "railgun" -> giveItem(player, ItemManager.createRailGun(plugin));
+            case "rocket_launcher" -> giveItem(player, ItemManager.createRocketLauncher(plugin));
             default -> player.sendMessage(MM.deserialize(
                     "<red><!i>Invalid item.</red>"
             ));
@@ -56,7 +57,7 @@ public class GetCommand implements TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (args.length == 1)
-            return Stream.of("ak", "railgun")
+            return Stream.of("ak", "railgun", "rocket_launcher")
                     .filter(x -> x.startsWith(args[0]))
                     .toList();
 
